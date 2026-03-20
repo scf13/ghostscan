@@ -1,0 +1,1 @@
+# GhostScan plugins package

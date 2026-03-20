@@ -1,0 +1,74 @@
+name: GhostScan CI
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  syntax-check:
+    name: Python Syntax Check
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          pip install requests dnspython beautifulsoup4 reportlab
+
+      - name: Syntax check all modules
+        run: |
+          python3 -m py_compile ghostscan.py
+          for f in modules/*.py; do
+            python3 -m py_compile "$f" && echo "✓ $f" || exit 1
+          done
+
+      - name: Import + unit tests
+        run: |
+          python3 -c "
+          import sys; sys.path.insert(0, '.')
+          from modules.utils import Colors, log, make_finding
+          from modules.wordlists import WordlistManager
+          from modules.scope import ScopeEnforcer, ScopeViolation
+          from modules.executor import SafeExecutor
+          from modules.intelligence import IntelligenceEngine
+          from modules.waf_bypass import WafBypass, build_bypass, WAF_PROFILES
+          from modules.workflow import WorkflowEngine, WORKFLOW_STEPS
+          from modules.reporting import ReportingModule, SEVERITY_ORDER
+
+          # Scope tests
+          s = ScopeEnforcer('example.com', strict=True)
+          assert s.is_in_scope('example.com')
+          assert s.is_in_scope('dev.example.com')
+          assert not s.is_in_scope('evil.com')
+          try:
+              ScopeEnforcer('example.com', strict=True, ssrf_protect=True).check('169.254.169.254')
+              assert False
+          except ScopeViolation:
+              pass
+
+          # WAF bypass tests
+          for p in WAF_PROFILES:
+              wb = WafBypass(p, 'normal')
+              for tech in wb.profile.get('techniques', []):
+                  assert wb.encode_payload(\"' OR 1=1\", tech) is not None
+              cmd = wb.patch_sqlmap_args(['sqlmap', '-u', 'http://x.com'])
+              assert '--tamper' in cmd
+
+          # Intelligence test
+          ie = IntelligenceEngine({'target':'x.com','min_severity':'INFO','verbose':False})
+          r = ie.analyse({'recon':{'open_ports':{'1.1.1.1':{6379:{'service':'redis','product':'Redis','version':'2.8'}}},'subdomains':[],'findings':[]},'web':{'technologies':{},'js_secrets':[{'type':'AWS Key','url':'x','match':'AKIA123'}],'endpoints':[],'dir_brute':[],'forms':[],'waf':{'detected':False},'header_audit':{'missing':{}},'findings':[]},'vuln':{'sqli_findings':[],'xss_findings':[],'brute_findings':[],'cve_findings':[],'findings':[]}})
+          assert len(r['intelligence']['correlations']) > 0
+
+          print('All tests passed')
+          "

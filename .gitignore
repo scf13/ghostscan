@@ -1,0 +1,68 @@
+# ── Python ──────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+*.pyd
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+
+# ── Virtual Environments ─────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+
+# ── GhostScan Output ─────────────────────────────────────────────────────────
+ghostscan_results/
+results/
+ghostscan_results/*.json
+session_*.json
+ghostscan_results/*.pdf
+ghostscan_results/*.html
+session_*.json
+
+# ── Temp files ───────────────────────────────────────────────────────────────
+/tmp/ghostscan_wordlists/
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~
+
+# ── OS ───────────────────────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ── IDE ──────────────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+.pytest_cache/
+.mypy_cache/
+
+# ── Sensitive ────────────────────────────────────────────────────────────────
+*.key
+*.pem
+*.cert
+*.crt
+.env
+.env.local
+config.local.py
+secrets.py
+
+# ── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+logs/
