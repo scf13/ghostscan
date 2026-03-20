@@ -10,7 +10,7 @@
 
 **Elite Modular Penetration Testing Framework for Kali Linux**
 
-[![CI](https://github.com/YOURUSERNAME/ghostscan/actions/workflows/ci.yml/badge.svg)](https://github.com/YOURUSERNAME/ghostscan/actions)
+[![CI](https://github.com/scf13/ghostscan/actions/workflows/ci.yml/badge.svg)](https://github.com/scf13/ghostscan/actions)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue?logo=python)](https://python.org)
 [![Platform](https://img.shields.io/badge/platform-Kali%20Linux-557C94?logo=linux)](https://kali.org)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
@@ -59,7 +59,7 @@ GhostScan gives you **10 findings you can act on today**, ranked by a scoring fo
 ## Quick Install
 
 ```bash
-git clone https://github.com/YOURUSERNAME/ghostscan.git
+git clone https://github.com/scf13/ghostscan.git
 cd ghostscan
 sudo bash install.sh
 ```
