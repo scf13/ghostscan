@@ -6,6 +6,24 @@ Uses SecLists payloads and Kali tools.
 """
 
 import re
+import sys
+import traceback
+import logging
+import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+from urllib.parse import urljoin, urlparse, parse_qs, quote
+from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from typing import List, Dict, Tuple, Optional
+from collections import defaultdict
+from datetime import datetime
+from bs4 import BeautifulSoup
+from urllib3.util import Retry
+from urllib3.exceptions import MaxRetryError
+from urllib3.response import HTTPResponse
+from urllib3.util.response import extract_response_from_exception
+from urllib3.util.retry import Retry
+from urllib3.util.response import extract_response_from_exception
 import time
 import json
 import concurrent.futures
